@@ -62,8 +62,8 @@ export class App extends Component {
     }
   };
 
-  loadMore = () => {
-    this.setState({
+  loadMore = async () => {
+    await this.setState({
       page: this.state.page + 1,
     });
   };
