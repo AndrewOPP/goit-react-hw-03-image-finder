@@ -29,32 +29,43 @@ export class App extends Component {
       images: [],
     });
     rightImages = [];
-    this.componentDidMount();
   };
 
-  componentDidMount = async () => {
-    if (!this.state.query) return;
+  componentDidUpdate = (prevProps, prevState) => {
+    if (
+      prevState.page !== this.state.page ||
+      prevState.query !== this.state.query
+    ) {
+      this.requestImages();
+    }
+  };
+
+  requestImages = async () => {
     try {
       images = await axios.get(
         `?q=${this.state.query}&page=${this.state.page}&key=${MYKEY}&image_type=photo&orientation=horizontal&per_page=12`
       );
-      if (images.data.hits.length === 0) toast.error('No images found');
+
+      if (images.data.hits.length === 0) return toast.error('No images found');
 
       totalHits = images.data.totalHits;
       rightImages = [...rightImages, ...images.data.hits];
 
       this.setState({
         images: rightImages,
+      });
+    } catch (error) {
+    } finally {
+      this.setState({
         isLoadind: false,
       });
-    } catch (error) {}
+    }
   };
 
-  loadMore = async () => {
-    await this.setState({
+  loadMore = () => {
+    this.setState({
       page: this.state.page + 1,
     });
-    this.componentDidMount();
   };
 
   render() {
