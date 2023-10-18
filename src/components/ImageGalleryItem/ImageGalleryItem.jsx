@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import Modal from 'react-modal';
 const customStyles = {
   content: {
@@ -24,44 +24,28 @@ const customStyles = {
 
 Modal.setAppElement('#root');
 
-export default class ImageGalleryItem extends Component {
-  state = {
-    isOpen: false,
-  };
-
-  modalOpen = () => {
-    this.setState({
-      isOpen: true,
-    });
-  };
-
-  modalClose = () => {
-    this.setState({
-      isOpen: false,
-    });
-  };
-
-  render() {
-    const { img } = this.props;
-    return (
-      <>
-        <img
-          onClick={() => this.modalOpen()}
-          width={600}
-          height={423}
-          src={img.webformatURL}
-          alt=""
-        />
-        <Modal
-          isOpen={this.state.isOpen}
-          // onAfterOpen={afterOpenModal}
-          onRequestClose={() => this.modalClose()}
-          style={customStyles}
-          contentLabel="Example Modal"
-        >
-          <img src={img.largeImageURL} alt="requestPhoto" />
-        </Modal>
-      </>
-    );
-  }
-}
+export const ImageGalleryItem = ({ img }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+  return (
+    <>
+      <img
+        onClick={() => openModal()}
+        width={600}
+        height={423}
+        src={img.webformatURL}
+        alt=""
+      />
+      <Modal
+        isOpen={isModalOpen}
+        // onAfterOpen={afterOpenModal}
+        onRequestClose={() => closeModal()}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <img src={img.largeImageURL} alt="requestPhoto" />
+      </Modal>
+    </>
+  );
+};
